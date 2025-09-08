@@ -51,8 +51,6 @@ import bcrypt from "bcryptjs"
   }]
  }, {timestamps : true})
 
- const User = mongoose.model("User",userSchema)
-
  //prehook
 
  userSchema.pre("save", async function (next) {
@@ -68,4 +66,6 @@ import bcrypt from "bcryptjs"
   }
  })
 
-export default User
+const User = mongoose.model("User",userSchema)
+
+export default User;
