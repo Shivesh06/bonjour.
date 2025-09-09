@@ -1,5 +1,7 @@
+
 import User from "../models/User.js"
 import FriendRequest from "../models/FriendRequest.js"
+
 
 export async function getMyFriends(req, res) {
   try {
@@ -164,8 +166,8 @@ export async function getFriendRequests(req, res) {
   
   } catch (error) {
 
-    console.log("Error in getPendingFriendRequests controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.log("Error in getPendingFriendRequests controller", error.message)
+    res.status(500).json({ message: "Internal Server Error" })
   
   }
 
