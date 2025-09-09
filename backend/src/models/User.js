@@ -18,27 +18,27 @@ import bcrypt from "bcryptjs"
   },
   bio : {
     type: String,
-    required: true,
+    //required: true,
     default: "",
   },
   profilePic : {
     type: String,
-    required: true,
+    //required: true,
     default: "",
   },
   nativeLanguage : {
     type: String,
-    required: true,
+    //required: true,
     default: "",
   },
   learningLanguage : [{
     type: String,
-    required: true,
+    //required: true,
     default: "",
   }],
   location : {
     type: String,
-    required: true,
+    //required: true,
     default: "",
   },
   isOnboarded : {
