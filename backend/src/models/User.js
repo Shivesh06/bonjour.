@@ -1,4 +1,4 @@
-import mongoose  from "mongoose";
+import mongoose  from "mongoose" 
 import bcrypt from "bcryptjs"
 
  const userSchema = new mongoose.Schema({
@@ -18,27 +18,22 @@ import bcrypt from "bcryptjs"
   },
   bio : {
     type: String,
-    //required: true,
     default: "",
   },
   profilePic : {
     type: String,
-    //required: true,
     default: "",
   },
   nativeLanguage : {
     type: String,
-    //required: true,
     default: "",
   },
-  learningLanguage : [{
-    type: String,
-    //required: true,
-    default: "",
-  }],
+  learningLanguage : {
+    type: [String],
+    default: [],
+  },
   location : {
     type: String,
-    //required: true,
     default: "",
   },
   isOnboarded : {
@@ -73,4 +68,4 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 const User = mongoose.model("User",userSchema)
 
-export default User;
+export default User 
