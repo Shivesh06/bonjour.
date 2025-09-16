@@ -1,14 +1,21 @@
-import { useState, useEffect } from "react" 
-import useAuthUser from "../hooks/useAuthUser" 
-import { useMutation, useQueryClient } from "@tanstack/react-query" 
-import toast from "react-hot-toast" 
-import { completeOnboarding } from "../lib/api" 
-import { LoaderIcon, GlobeIcon, ShuffleIcon, CameraIcon, PlusIcon, XIcon } from "lucide-react" 
-import { LANGUAGES } from "../constants" 
+import { useState, useEffect } from "react";
+import useAuthUser from "../hooks/useAuthUser";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { completeOnboarding } from "../lib/api";
+import {
+  LoaderIcon,
+  GlobeIcon,
+  ShuffleIcon,
+  CameraIcon,
+  PlusIcon,
+  XIcon,
+} from "lucide-react";
+import { LANGUAGES } from "../constants";
 
 const OnboardingPage = () => {
-  const { authUser } = useAuthUser() 
-  const queryClient = useQueryClient() 
+  const { authUser } = useAuthUser();
+  const queryClient = useQueryClient();
 
   const [formState, setFormState] = useState({
     fullName: authUser?.fullName || "",
@@ -18,69 +25,70 @@ const OnboardingPage = () => {
     newLanguage: "",
     location: authUser?.location || "",
     profilePic: authUser?.profilePic || "",
-  }) 
+  });
 
-  const [countries, setCountries] = useState([]) 
+  const [countries, setCountries] = useState([]);
 
   useEffect(() => {
     const fetchCountries = async () => {
       try {
-        const response = await fetch("http://localhost:6969/api/countries") 
-        const data = await response.json() 
-        setCountries(data.countries) 
+        const response = await fetch("http://localhost:6969/api/countries");
+        const data = await response.json();
+        setCountries(data.countries);
       } catch (err) {
-        console.error("Failed to fetch countries:", err) 
+        console.error("Failed to fetch countries:", err);
       }
-    } 
-    fetchCountries() 
-  }, []) 
+    };
+    fetchCountries();
+  }, []);
 
   const { mutate: onboardingMutation, isPending } = useMutation({
     mutationFn: completeOnboarding,
     onSuccess: () => {
-      toast.success("Profile onboarded successfully") 
-      queryClient.invalidateQueries({ queryKey: ["authUser"] }) 
+      toast.success("Profile onboarded successfully");
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || error.message) 
+      toast.error(error.response?.data?.message || error.message);
     },
-  }) 
+  });
 
   const handleSubmit = (e) => {
-    e.preventDefault() 
-    onboardingMutation(formState) 
-  } 
+    e.preventDefault();
+    console.log("Submitting:", formState.learningLanguage)
+    onboardingMutation(formState);
+  };
 
   const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1 
-    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png` 
-    setFormState({ ...formState, profilePic: randomAvatar }) 
-    toast.success("Random profile picture generated!") 
-  } 
+    const idx = Math.floor(Math.random() * 100) + 1;
+    const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
+    setFormState({ ...formState, profilePic: randomAvatar });
+    toast.success("Random profile picture generated!");
+  };
 
   const handleAddLanguage = () => {
-    const lang = formState.newLanguage.toLowerCase() 
     if (
-      lang &&
+      formState.newLanguage &&
       formState.learningLanguage.length < 3 &&
-      !formState.learningLanguage.includes(lang)
+      !formState.learningLanguage.includes(formState.newLanguage)
     ) {
-      const updated = [...formState.learningLanguage, lang] 
-      setFormState({
-        ...formState,
-        learningLanguage: updated,
+      setFormState((prev) => ({
+        ...prev,
+        learningLanguage: [...prev.learningLanguage, formState.newLanguage],
         newLanguage: "",
-      }) 
-      if (updated.length === 3) toast.success("You have selected 3 languages!") 
+      }));
+      if (formState.learningLanguage.length + 1 === 3) {
+        toast.success("You have selected 3 languages!");
+      }
     }
-  } 
+  };
 
   const handleRemoveLanguage = (lang) => {
     setFormState({
       ...formState,
       learningLanguage: formState.learningLanguage.filter((l) => l !== lang),
-    }) 
-  } 
+    });
+  };
 
   return (
     <div className="min-h-screen bg-base-100 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
@@ -182,7 +190,9 @@ const OnboardingPage = () => {
                   {formState.learningLanguage.map((lang, index) => (
                     <div key={index} className="flex gap-2 items-center">
                       <div className="select select-bordered w-full flex-grow flex items-center justify-center">
-                        <span className="capitalize text-left w-full">{lang}</span>
+                        <span className="capitalize text-left w-full">
+                          {lang}
+                        </span>
                       </div>
                       <button
                         type="button"
@@ -280,7 +290,7 @@ const OnboardingPage = () => {
         </div>
       </div>
     </div>
-  ) 
-} 
+  );
+};
 
-export default OnboardingPage 
+export default OnboardingPage;

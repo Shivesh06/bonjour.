@@ -7,25 +7,29 @@ import FriendCard, { getLanguageFlag } from "../components/FriendCard"
 import NoFriendsFound from "../components/NoFriendsFound"
 
 const getLearningLanguages = (languages) => {
-  if (Array.isArray(languages) && languages.length > 0) {
-    if (typeof languages[0] === 'string' && languages[0].includes('[')) {
-      return languages[0]
-        .replace(/[\[\]']/g, "")
-        .split(/[ ,]+/)
-        .filter(Boolean)
-        .map((lang) => lang.trim())
-    }
+  if (!languages) return []
+
+  if (Array.isArray(languages)) {
     return languages
+      .map((lang) =>
+        typeof lang === "string"
+          ? lang.replace(/[\[\]']/g, "").trim()
+          : ""
+      )
+      .join(",")
+      .split(",")
+      .map(l => l.trim())
+      .filter(Boolean)
   }
-  
+
   if (typeof languages === "string") {
     return languages
       .replace(/[\[\]']/g, "")
-      .split(/[ ,]+/)
+      .split(",")
+      .map(l => l.trim())
       .filter(Boolean)
-      .map((lang) => lang.trim())
   }
-  
+
   return []
 }
 
